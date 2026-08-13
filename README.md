@@ -6,8 +6,11 @@
 
 ## 在线预览
 
-- 站点：https://wadesha.github.io/china-railway-map/
+- 主站（ECharts 矢量）：https://wadesha.github.io/china-railway-map/
+- 子站（腾讯地图 + 回退演示）：https://wadesha.github.io/china-railway-map/subsite/
 - 仓库：`Wadesha/china-railway-map`
+
+> 子站说明：尝试接入**腾讯地图 JS API**（合规白名单 provider），用于真实底图 / POI 搜索 / 路线规划。受 GitHub Pages 部署约束，连接器的「免 key 代理」仅在 WorkBuddy 内有效，对外访客会失效；因此子站默认走**你自备 key（占位符）**模式——未配置 key 时自动回退 ECharts 矢量底图，POI 搜索与路线规划返回**模拟数据并标注**。在源码 `TENCENT_KEY` 处填入真实 key 即切换为真实调用。
 
 ---
 
@@ -15,11 +18,16 @@
 
 ```
 china-railway-map/
-├── index.html        # 最终产物（单文件，GeoJSON 已内联，约 589KB）
-├── template.html     # 页面模板，含 __CHINA_GEOJSON__ 占位符
+├── index.html        # 主站最终产物（单文件，GeoJSON 已内联，约 589KB）
+├── template.html     # 主站页面模板，含 __CHINA_GEOJSON__ 占位符
 ├── china.json        # 中国省级边界 GeoJSON（DataV，含台湾/港澳/南海诸岛）
-├── build.js          # 把 china.json 内联进 template.html → index.html
-├── deploy.js         # 通过 GitHub Contents API 上传并启用 Pages
+├── build.js          # 主站：把 china.json 内联进 template.html → index.html
+├── deploy.js         # 主站部署：GitHub Contents API 上传并启用 Pages
+├── subsite/          # 子站（腾讯地图 + 回退演示）
+│   ├── index.html    # 子站产物（已内联 GeoJSON）
+│   ├── template.html # 子站模板（含 TENCENT_KEY 占位符）
+│   ├── build.js      # 子站构建
+│   └── push-subsite.js # 子站上传到仓库 subsite/ 目录
 └── README.md
 ```
 
