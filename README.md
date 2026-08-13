@@ -7,10 +7,10 @@
 ## 在线预览
 
 - 主站（ECharts 矢量）：https://wadesha.github.io/china-railway-map/
-- 子站（腾讯地图 + 回退演示）：https://wadesha.github.io/china-railway-map/subsite/
+- 子站（腾讯地图真实数据快照）：https://wadesha.github.io/china-railway-map/subsite/
 - 仓库：`Wadesha/china-railway-map`
 
-> 子站说明：尝试接入**腾讯地图 JS API**（合规白名单 provider），用于真实底图 / POI 搜索 / 路线规划。受 GitHub Pages 部署约束，连接器的「免 key 代理」仅在 WorkBuddy 内有效，对外访客会失效；因此子站默认走**你自备 key（占位符）**模式——未配置 key 时自动回退 ECharts 矢量底图，POI 搜索与路线规划返回**模拟数据并标注**。在源码 `TENCENT_KEY` 处填入真实 key 即切换为真实调用。
+> 子站说明：本地通过**已连接的腾讯地图连接器**采集了真实数据——27 个枢纽站真实坐标（geocoder）、8 大枢纽周边真实 POI（地铁站/餐饮，placeSearchNearby）、5 组城际真实乘车方案（directionTransit，公交/地铁/高铁混合）——并内联打包进静态页。访问者**无需任何运行时 key** 即可查看真实数据。底图仍用 ECharts 矢量渲染（合规、含完整国界）。连接器代理仅在 WorkBuddy 内有效、无法跟随部署，故采用「本地采集→快照内联」方式；如需实时调用可自行在源码 `TENCENT_KEY` 填 key。
 
 ---
 
@@ -23,11 +23,15 @@ china-railway-map/
 ├── china.json        # 中国省级边界 GeoJSON（DataV，含台湾/港澳/南海诸岛）
 ├── build.js          # 主站：把 china.json 内联进 template.html → index.html
 ├── deploy.js         # 主站部署：GitHub Contents API 上传并启用 Pages
-├── subsite/          # 子站（腾讯地图 + 回退演示）
-│   ├── index.html    # 子站产物（已内联 GeoJSON）
-│   ├── template.html # 子站模板（含 TENCENT_KEY 占位符）
-│   ├── build.js      # 子站构建
+├── subsite/          # 子站（腾讯地图真实数据快照）
+│   ├── index.html    # 子站产物（已内联 GeoJSON + 真实数据快照）
+│   ├── template.html # 子站模板（含数据占位符）
+│   ├── build.js      # 子站构建（内联 GeoJSON + 3 个快照）
 │   └── push-subsite.js # 子站上传到仓库 subsite/ 目录
+├── data/             # 腾讯地图真实数据快照（本地采集，2026-08-14）
+│   ├── stations_real.json  # 27 个枢纽站真实坐标
+│   ├── poi.json            # 8 大枢纽周边真实 POI（地铁站 / 餐饮）
+│   └── routes.json         # 5 组城际真实乘车方案
 └── README.md
 ```
 
@@ -107,6 +111,21 @@ const LINES = [
 - 新增线路：照格式加一项（`name`/`en`/`color`/`km`/`coords`）。
 - 车站点：由 `coords` 自动聚合去重，经停线路越多圆点越大，无需手动维护。
 - 换成真实数据：把 `coords` 替换为真实经纬度表，或接入线路 GeoJSON 后改为分段绘制。
+
+---
+
+## 重新采集真实数据快照（子站）
+
+真实数据由 WorkBuddy 内已连接的**腾讯地图连接器**（MCP 工具）本地采集，落盘为 `data/*.json`，再由 `subsite/build.js` 内联进静态页。流程：
+
+1. 在 WorkBuddy 中确保 `tencent-map` 连接器已连接。
+2. 用连接器工具采集（单次并发 ≤3 以避开代理限流）：
+   - `geocoder` / `placeSuggestion`：抓车站真实坐标 → `data/stations_real.json`
+   - `placeSearchNearby`：抓枢纽周边 POI（中心点取真实站坐标，半径约 2.5km）→ `data/poi.json`
+   - `directionTransit`：抓城际乘车方案（from/to 用真实坐标）→ `data/routes.json`
+3. `cd subsite && node build.js` 重新内联，`node push-subsite.js` 重新发布。
+
+> 合规提示：仅采集公共设施 / 公开商业 POI，量级克制（每类取前 10 条），快照保留「数据来源：腾讯地图」与采集日期；不在 Pages 上做无 key 的实时调用。
 
 ---
 
