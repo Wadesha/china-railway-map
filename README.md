@@ -10,7 +10,7 @@
 - 子站（腾讯地图真实数据快照）：https://wadesha.github.io/china-railway-map/subsite/
 - 仓库：`Wadesha/china-railway-map`
 
-> 子站说明：本地通过**已连接的腾讯地图连接器**采集了真实数据——27 个枢纽站真实坐标（geocoder）、8 大枢纽周边真实 POI（地铁站/餐饮，placeSearchNearby）、5 组城际真实乘车方案（directionTransit，公交/地铁/高铁混合）——并内联打包进静态页。访问者**无需任何运行时 key** 即可查看真实数据。底图仍用 ECharts 矢量渲染（合规、含完整国界）。连接器代理仅在 WorkBuddy 内有效、无法跟随部署，故采用「本地采集→快照内联」方式；如需实时调用可自行在源码 `TENCENT_KEY` 填 key。
+> 子站说明：本地通过**已连接的腾讯地图连接器**采集了真实数据——27 个枢纽站真实坐标（geocoder）、14 大枢纽周边真实 POI（地铁站/餐饮/酒店/旅游景点，placeSearchNearby）、5 组城际真实乘车方案（directionTransit，公交/地铁/高铁混合）——并内联打包进静态页。访问者**无需任何运行时 key** 即可查看真实数据。底图仍用 ECharts 矢量渲染（合规、含完整国界）。连接器代理仅在 WorkBuddy 内有效、无法跟随部署，故采用「本地采集→快照内联」方式；如需实时调用可自行在源码 `TENCENT_KEY` 填 key。
 
 ---
 
@@ -30,7 +30,7 @@ china-railway-map/
 │   └── push-subsite.js # 子站上传到仓库 subsite/ 目录
 ├── data/             # 腾讯地图真实数据快照（本地采集，2026-08-14）
 │   ├── stations_real.json  # 27 个枢纽站真实坐标
-│   ├── poi.json            # 8 大枢纽周边真实 POI（地铁站 / 餐饮）
+│   ├── poi.json            # 14 大枢纽周边真实 POI（地铁站 / 餐饮 / 酒店 / 旅游景点）
 │   └── routes.json         # 5 组城际真实乘车方案
 └── README.md
 ```
