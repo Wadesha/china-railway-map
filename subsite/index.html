@@ -61,7 +61,7 @@
       <div class="row"><select id="hub"></select></div>
       <div class="tabs" id="poiTabs"></div>
       <div id="poiList"></div>
-      <div class="hint">数据来源：腾讯地图 placeSearchNearby（快照 <span id="poiDate"></span>）。14 大枢纽 × 4 类别（地铁站/餐饮/酒店/旅游景点），每类前 10 条真实快照。</div>
+      <div class="hint">数据来源：腾讯地图真实快照（<span id="poiDate"></span>）。27 枢纽 × 4 类别（地铁站/餐饮/酒店/旅游景点），每类前 10 条。其中 14 个原始枢纽用 placeSearchNearby（站周边 2.5km 精采）；13 个新枢纽因 nearby 接口临时降级，改用 placeSuggestion（全市推荐）按站心距离自算、取最近的 10 条。均为真实公开 POI，非实时。</div>
     </div>
     <div class="blk">
       <h3>城际真实乘车方案</h3>
